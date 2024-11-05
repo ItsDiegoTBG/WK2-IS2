@@ -22,7 +22,9 @@ public class CalcularCosto {
     public void mostrraInfoo(){
         System.out.println(costoFinal);
     }
-    public void CalcularCostoFinal(int CantMiembros, String Categoria, double costoActual){
+    public void CalcularCostoFinal(int CantMiembros, String Categoria, double costoActual, double CostoFuncAdicional){
+
+        costoFinal*=CostoFuncAdicional;
 
         if (Categoria== "Premium"){
             costoFinal *= 1.15;
