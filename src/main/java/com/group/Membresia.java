@@ -2,12 +2,15 @@ package com.group;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Membresia {
 private String nombrePlan;
     private double costoBase;
-    private List<FuncionAdicional> funcionesAdicionales;
+    private List<PlanMembresia> funcionesAdicionales;
     private boolean esPremium;
+    private double costoFinal; 
+    private int miembros;
     
     public Membresia(String nombrePlan, double costoBase, boolean esPremium) {
         this.nombrePlan = nombrePlan;
@@ -17,15 +20,15 @@ private String nombrePlan;
     }
 
 
-    public void agregarFuncionAdicional(FuncionAdicional funcion) {
+    public void agregarPlanMembresia(PlanMembresia funcion) {
         this.funcionesAdicionales.add(funcion);
     }
 
       public double calcularCostoTotal() {
         double costoTotal = this.costoBase;
 
-         for (FuncionAdicional funcion : funcionesAdicionales) {
-            costoTotal += funcion.getCosto();
+         for (PlanMembresia funcion : funcionesAdicionales) {
+            costoTotal += funcion.getCostoBase();
         }
 
          if (esPremium) {
@@ -36,25 +39,46 @@ private String nombrePlan;
     }
 
 
-    public double aplicarDescuentoGrupo(int cantidadMiembros) {
-        double costoTotal = calcularCostoTotal();
-        
-        if (cantidadMiembros > 1) {
-            costoTotal *= 0.90; // Descuento del 10%
-            System.out.println("¡Estás ahorrando un 10% por inscribirte con otros miembros!");
+     public void CalcularCostoFinal(int CantMiembros, String Categoria, double costoActual, double CostoFuncAdicional){
+
+        costoFinal*=CostoFuncAdicional;
+        if (CantMiembros>1){
+            costoFinal *= CantMiembros;
+            costoFinal = costoFinal*0.9;
         }
 
-        if (costoTotal > 400) {
-            costoTotal -= 50; 
-            System.out.println("¡Descuento de $50 por exceder los $400 en total!");
-        } else if (costoTotal > 200) {
-            costoTotal -= 20; 
-            System.out.println("¡Descuento de $20 por exceder los $200 en total!");
+        if (Categoria.equalsIgnoreCase("Premium")){
+            System.out.println("Recargo aplicado por categoria: 15%");
+            costoFinal *= 1.15;
+        }
+        if (costoFinal > 400) {
+            System.out.println("Descuento especial aplicado: $50");
+            costoFinal -= 50;
+        } else if (costoFinal > 200) {
+            System.out.println("Descuento especial aplicado: $20");
+            costoFinal -= 20;
         }
 
-        return costoTotal;
+        System.out.println("El Costo final de su membresia seria: $ "+costoFinal);
     }
+    public void InfoDescuento(String Categoria){
+        if (Categoria.equalsIgnoreCase("Familiar")){
+            System.out.println("   ");
+        }else{
+            System.out.println("Recuerde que si se registran 2 o mas personas a la vez, obtendran un descuento del 10%");
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Deseas agregarte con mas miembros?(cualquier respuesta distinta a 'si' sera tomada como un no)");
+            String respuesta = scanner.next();;
+            if (respuesta.equalsIgnoreCase("si")){
+                System.out.println("Cuantos miembros van a registrarse en total (incluyendo a usted): ");
+                int miembroos= scanner.nextInt();
+                this.miembros=miembroos;
+            }
+            scanner.close();
+        }
+        
 
+    }
 
     public String getNombrePlan() {
         return nombrePlan;
@@ -64,11 +88,17 @@ private String nombrePlan;
         return costoBase;
     }
 
-    public List<FuncionAdicional> getFuncionesAdicionales() {
+    public List<PlanMembresia> getFuncionesAdicionales() {
         return funcionesAdicionales;
     }
 
     public boolean esPremium() {
         return esPremium;
     }
+
+    public int getMiembros(){
+        return miembros;
+    }
+
+
 }
