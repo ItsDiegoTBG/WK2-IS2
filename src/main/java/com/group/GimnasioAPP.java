@@ -17,10 +17,10 @@ public class GimnasioAPP {
 
         //cOSTO FUNCIONES ADICIONALES
         double costoFuncionesAdicionales =1;
-        CalcularCosto costo= new CalcularCosto(planSeleccionado.getCostoBase());
+        Membresia costo= new Membresia(planSeleccionado.getNombre(),planSeleccionado.getCostoBase(),false);
         //Se le menciona al cliente que puede acceder a descuentos si acceden mas miembros
         costo.InfoDescuento(planSeleccionado.getNombre());
         //Calcula y muestra el costo final de la membresia
-        costo.CalcularCostoFinal(costo.getMiembros(), planSeleccionado.getNombre(), costo.getcostoFinal(),costoFuncionesAdicionales);
+        costo.CalcularCostoFinal(costo.getMiembros(), planSeleccionado.getNombre(), costo.getCostoBase(),costoFuncionesAdicionales);
     }
 }
