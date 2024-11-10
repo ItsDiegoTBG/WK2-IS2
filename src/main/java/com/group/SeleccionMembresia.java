@@ -15,9 +15,17 @@ public class SeleccionMembresia {
 
     // Método para inicializar los planes de membresía
     private void inicializarPlanes() {
-        planes.add(new PlanMembresia("Básico", 50.0, "Acceso al gimnasio y uso de máquinas"));
-        planes.add(new PlanMembresia("Premium", 100.0, "Acceso a instalaciones exclusivas, clases grupales y piscina"));
-        planes.add(new PlanMembresia("Familiar", 150.0, "Acceso para 4 personas, incluye clases grupales y áreas recreativas"));
+        FuncionAdicional entrenamientoPersonal = new FuncionAdicional("Entrenamiento Personal", 30.0);
+        FuncionAdicional clasesGrupales = new FuncionAdicional("Clases Grupales", 20.0);
+        FuncionAdicional masajeRecuperacion = new FuncionAdicional("Masaje de Recuperación", 40.0);
+        List<FuncionAdicional> funcionAdicionals = new ArrayList<>();
+        funcionAdicionals.add(entrenamientoPersonal);
+        funcionAdicionals.add(clasesGrupales);
+        funcionAdicionals.add(masajeRecuperacion);
+
+        planes.add(new PlanMembresia("Básico", 50.0, "Acceso al gimnasio y uso de máquinas",funcionAdicionals,TypeMember.BASIC));
+        planes.add(new PlanMembresia("Premium", 100.0, "Acceso a instalaciones exclusivas, clases grupales y piscina",funcionAdicionals,TypeMember.PREMIUM));
+        planes.add(new PlanMembresia("Familiar", 150.0, "Acceso para 4 personas, incluye clases grupales y áreas recreativas",funcionAdicionals,TypeMember.FAMILY));
     }
 
     // Método para mostrar los planes de membresía disponibles
@@ -29,6 +37,7 @@ public class SeleccionMembresia {
             System.out.println();
         }
     }
+
 
     // Método para seleccionar un plan de membresía
     public PlanMembresia seleccionarPlan() {

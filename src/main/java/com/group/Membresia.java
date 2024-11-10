@@ -5,49 +5,36 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Membresia {
-private String nombrePlan;
-    private double costoBase;
-    private List<PlanMembresia> funcionesAdicionales;
-    private boolean esPremium;
-    private double costoFinal; 
+    private final PlanMembresia planMembresia;
     private int miembros;
-    
-    public Membresia(String nombrePlan, double costoBase, boolean esPremium) {
-        this.nombrePlan = nombrePlan;
-        this.costoBase = costoBase;
-        this.esPremium = esPremium;
-        this.funcionesAdicionales = new ArrayList<>();
+    private double costoFuncionesAdicionales;
+    public Membresia (PlanMembresia planMembresia) {
+        this.planMembresia = planMembresia;
     }
 
-
-    public void agregarPlanMembresia(PlanMembresia funcion) {
-        this.funcionesAdicionales.add(funcion);
+    public double getCostoFuncionesAdicionales() {
+        return costoFuncionesAdicionales;
     }
 
-      public double calcularCostoTotal() {
-        double costoTotal = this.costoBase;
+    public void setCostoFuncionesAdicionales(double costoFuncionesAdicionales) {
+        this.costoFuncionesAdicionales = costoFuncionesAdicionales;
+    }
 
-         for (PlanMembresia funcion : funcionesAdicionales) {
-            costoTotal += funcion.getCostoBase();
-        }
-
-         if (esPremium) {
+    public double calcularCostoTotal() {
+        double costoTotal = this.planMembresia.getCostoBase() * this.miembros ;
+         if (this.planMembresia.getTypeMember().equals(TypeMember.PREMIUM)) {
             costoTotal += costoTotal * 0.15; // 15% de recargo para planes premium
         }
-
-        return costoTotal;
+        return costoTotal + this.costoFuncionesAdicionales;
     }
-
-
-     public void CalcularCostoFinal(int CantMiembros, String Categoria, double costoActual, double CostoFuncAdicional){
-
-        costoFinal*=CostoFuncAdicional;
-        if (CantMiembros>1){
-            costoFinal *= CantMiembros;
-            costoFinal = costoFinal*0.9;
+    public void calcularCostoFinal(int cantMiembros, String categoria, double costoActual, double costoFuncAdicional){
+         double costoFinal = costoActual + costoFuncAdicional;
+        if (cantMiembros>=2){
+            costoFinal *= cantMiembros;
+            costoFinal = costoFinal *0.9;
         }
 
-        if (Categoria.equalsIgnoreCase("Premium")){
+        if (categoria.equalsIgnoreCase("Premium")){
             System.out.println("Recargo aplicado por categoria: 15%");
             costoFinal *= 1.15;
         }
@@ -58,12 +45,17 @@ private String nombrePlan;
             System.out.println("Descuento especial aplicado: $20");
             costoFinal -= 20;
         }
-
-        System.out.println("El Costo final de su membresia seria: $ "+costoFinal);
+         String resultado = String.format("%.2f", costoFinal);
+        System.out.println("El Costo final de su membresia seria: $ "+ resultado); //redondea en dos decimales
     }
-    public void InfoDescuento(String Categoria){
-        if (Categoria.equalsIgnoreCase("Familiar")){
-            System.out.println("   ");
+
+    public void setMiembros(int miembros) {
+        this.miembros = miembros;
+    }
+
+    public void InfoDescuento(){
+        if (this.planMembresia.getTypeMember().equals(TypeMember.FAMILY)){
+            System.out.println("Plan familiar seleccionado, no hay descuentos disponibles.");
         }else{
             System.out.println("Recuerde que si se registran 2 o mas personas a la vez, obtendran un descuento del 10%");
             Scanner scanner = new Scanner(System.in);
@@ -71,31 +63,58 @@ private String nombrePlan;
             String respuesta = scanner.next();;
             if (respuesta.equalsIgnoreCase("si")){
                 System.out.println("Cuantos miembros van a registrarse en total (incluyendo a usted): ");
-                int miembroos= scanner.nextInt();
-                this.miembros=miembroos;
+                int miembros= scanner.nextInt();
+                this.miembros=miembros;
             }
-            scanner.close();
+           // scanner.close();
+            System.out.println("¿Quieres agregar una funcion adicional a tu plan (si/no)?");
+            String responseAddFunction = scanner.next();
+            while (responseAddFunction.equalsIgnoreCase("si")) {
+                System.out.println("Funciones adicionales disponibles:");
+                for (FuncionAdicional funcion : planMembresia.getFuncionesAdicionales()) {
+                    System.out.println("* " + funcion.getNombre() + " - $ " + funcion.getCosto());
+                }
+
+                System.out.println("Ingresa el número de la función adicional que deseas agregar:");
+                String funcionAdicional = scanner.next();
+
+                // Selecciona la función adicional según el número ingresado
+                FuncionAdicional funcionAdicional1 = this.planMembresia.getFuncionesAdicionales().get(Integer.parseInt(funcionAdicional)-1);
+                // Agrega el costo de la función adicional solo una vez
+                this.costoFuncionesAdicionales += funcionAdicional1.getCosto();
+
+                // Preguntar nuevamente si quiere agregar otra función adicional
+                System.out.println("¿Quieres agregar otra función adicional a tu plan (si/no)?");
+                responseAddFunction = scanner.next();
+            }
+
         }
+        // this.planMembresia.setCostoBase(this.planMembresia.getCostoBase());
         
 
     }
+    public boolean confirmarMembresia(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*******************************");
+        System.out.println("Detalles del proceso a seguir:");
+        System.out.println("********************************");
 
-    public String getNombrePlan() {
-        return nombrePlan;
+        System.out.println("Plan:"+this.planMembresia.getNombre());
+        System.out.println("Costo base: $"+this.planMembresia.getCostoBase());
+        System.out.println("Cantidad de miembros: "+this.miembros);
+        System.out.println("Costo de funciones adicionales: $"+this.costoFuncionesAdicionales);
+        System.out.println("Costo  Total : $"+this.calcularCostoTotal());
+
+        System.out.print("¿Desea confirmar el plan de membresía? (si/no): ");
+        String confirmacion = scanner.next();
+
+        if (confirmacion.equalsIgnoreCase("si")) {
+            return true;
+        } else {
+            System.out.println("Operación cancelada por el usuario.");
+            return false;
+        }
     }
-
-    public double getCostoBase() {
-        return costoBase;
-    }
-
-    public List<PlanMembresia> getFuncionesAdicionales() {
-        return funcionesAdicionales;
-    }
-
-    public boolean esPremium() {
-        return esPremium;
-    }
-
     public int getMiembros(){
         return miembros;
     }
