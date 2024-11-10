@@ -13,13 +13,10 @@ public class GimnasioAPP {
         planSeleccionado.mostrarInfo();
         System.out.println("Tenemos ademas las siguientes funciones");
         planSeleccionado.mostrarFuncionalidadesAdicionales();
-
-        // COSTO FUNCIONES ADICIONALES
-        double costoFuncionesAdicionales = 0;
         Membresia membresia = new Membresia(planSeleccionado);
-        membresia.InfoDescuento();
+        membresia.infoDescuento();
         if(membresia.confirmarMembresia()){
-            membresia.calcularCostoFinal(membresia.getMiembros(), planSeleccionado.getNombre(),planSeleccionado.getCostoBase(),costoFuncionesAdicionales);
+            membresia.calcularCostoFinal();
         }else {
             System.out.println("La membresía ha sido cancelada.Adios");
         }
