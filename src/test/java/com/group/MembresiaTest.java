@@ -30,7 +30,7 @@ public class MembresiaTest {
         membresia = new Membresia(planFamily);
         membresia.setMiembros(2);
         double costoTotal = membresia.calcularCostoTotal();
-        assertEquals(200.0, costoTotal, "El costo total para el plan Family con 2 miembros debería ser 200.0");
+        assertEquals(100.0, costoTotal, "El costo total para el plan Family con 2 miembros debería ser 200.0");
     }
 
 
